@@ -306,3 +306,5 @@ app.listen(PORT, '0.0.0.0', () => {
   ✅ Accessible from any device on your network
   `);
 });
+
+module.exports = app;
