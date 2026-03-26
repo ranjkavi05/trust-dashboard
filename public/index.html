@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hushh TrustLens — Privacy & Trust Management</title>
+  <meta name="description" content="AI-powered privacy dashboard to manage permissions, monitor connected services, and protect your data." />
+
+  <!-- Intro.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js"></script>
+
+  <!-- Vanilla Tilt -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <!-- ─── SIDEBAR ────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <i data-lucide="shield-check"></i>
+      <div class="brand-text">
+        <span class="brand-name">Hushh</span>
+        <span class="brand-sub">TrustLens</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <a href="#" class="nav-item active" data-page="dashboard">
+        <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" data-page="permissions" data-intro="Use this menu to manually control individual app permissions." data-step="4">
+        <i data-lucide="toggle-right"></i><span>Permissions</span>
+      </a>
+      <a href="#" class="nav-item" data-page="services">
+        <i data-lucide="plug"></i><span>Connected Services</span>
+      </a>
+      <a href="#" class="nav-item" data-page="privacy-score">
+        <i data-lucide="gauge"></i><span>Privacy Score</span>
+      </a>
+      <a href="#" class="nav-item" data-page="alerts">
+        <i data-lucide="bell-ring"></i><span>Alerts</span>
+      </a>
+      <a href="#" class="nav-item" data-page="logs">
+        <i data-lucide="scroll-text"></i><span>Logs</span>
+      </a>
+      <a href="#" class="nav-item" data-page="data-usage">
+        <i data-lucide="pie-chart"></i><span>Data Usage</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer" id="sidebar-footer" style="position:relative;">
+      <div class="user-dropdown" id="user-dropdown">
+        <div class="ud-header">
+          <strong class="user-name">VJ Admin</strong><br>
+          <small style="color:var(--text-muted)">vj@trustlens.hushh</small>
+        </div>
+        <div class="ud-divider"></div>
+        <button class="ud-item" onclick="navigate('profile'); closeUserMenu();"><i data-lucide="user"></i> My Profile</button>
+        <button class="ud-item" onclick="navigate('settings'); closeUserMenu();"><i data-lucide="settings"></i> Settings</button>
+        <div class="ud-divider"></div>
+        <button class="ud-item text-danger" onclick="showToast('Signed out successfully'); closeUserMenu(); navigate('dashboard');"><i data-lucide="log-out"></i> Sign Out</button>
+      </div>
+
+      <div class="user-badge" data-intro="For the demo, click this bug icon to simulate an active data breach!" data-step="5" data-intro-position="right">
+        <div class="user-profile-trigger" id="user-profile-trigger" title="View Profile Options">
+          <div class="avatar">VJ</div>
+          <div style="flex:1">
+            <div class="user-name">User</div>
+            <div class="user-role">Admin</div>
+          </div>
+        </div>
+        <button id="demo-attack-btn" class="btn btn-ghost btn-sm" title="Simulate Data Breach">
+          <i data-lucide="bug"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ─── MOBILE HEADER ─────────────────────────── -->
+  <header class="mobile-header" id="mobile-header">
+    <button class="hamburger" id="hamburger">
+      <i data-lucide="menu"></i>
+    </button>
+    <div class="mobile-brand">
+      <i data-lucide="shield-check"></i>
+      <div class="brand-text">
+        <span class="brand-name">Hushh</span>
+        <span class="brand-sub">TrustLens</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ──────────────────────────── -->
+  <main class="main-content" id="main-content">
+    <!-- Dynamically loaded by JS modules -->
+  </main>
+
+  <!-- ─── TOAST CONTAINER ────────────────────────── -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ─── THEME TOGGLE ───────────────────────────── -->
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Theme">
+    <i data-lucide="sun"></i>
+  </button>
+
+  <!-- ─── CHATBOT FAB + POPUP ────────────────────── -->
+  <button class="chat-fab" id="chat-fab">
+    <i data-lucide="message-circle"></i>
+  </button>
+
+  <div class="chat-popup" id="chat-popup">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <i data-lucide="bot"></i>
+        <span>Privacy Assistant</span>
+      </div>
+      <button class="chat-close" id="chat-close">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-msg bot">
+        <div class="chat-bubble">👋 Hi! I'm your privacy assistant. Ask me anything about your data safety!</div>
+      </div>
+    </div>
+    <form class="chat-input-bar" id="chat-form">
+      <input type="text" id="chat-input" placeholder="Ask about your privacy…" autocomplete="off" />
+      <button type="submit"><i data-lucide="send"></i></button>
+    </form>
+  </div>
+
+  <!-- ─── OVERLAY for mobile ────────────────────── -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- JS Modules -->
+  <script src="/js/app.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/permissions.js"></script>
+  <script src="/js/services.js"></script>
+  <script src="/js/privacy-score.js"></script>
+  <script src="/js/alerts.js"></script>
+  <script src="/js/logs.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/chatbot.js"></script>
+  <script src="/js/profile.js"></script>
+</body>
+</html>
